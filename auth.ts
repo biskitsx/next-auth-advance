@@ -6,6 +6,18 @@ import { getUserById } from "./data/user"
 import { UserRole } from "@prisma/client"
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
+  pages:{
+    signIn: "/auth/login",
+    error: "/auth/error"
+  },
+  events:{
+    linkAccount:async ({user}) => {
+      await db.user.update({
+        where: {id: user.id},
+        data: {emailVerified: new Date()}
+      })
+    }
+  },
   adapter: PrismaAdapter(db),
   session: {strategy: "jwt"},
   ...authConfig,
