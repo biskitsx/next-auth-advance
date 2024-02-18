@@ -42,9 +42,13 @@ export const LoginForm = () => {
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     startTransition(() => {
       login(data).then((res) => {
-        setError(res.error);
+        if (res?.error) {
+          setError(res.error);
+        }
+        if (res?.success) {
+          setSuccess(res.success);
+        }
         // TODO
-        // if (res.success) setSuccess(res.success);
       });
     });
   };
